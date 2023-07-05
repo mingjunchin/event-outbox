@@ -24,17 +24,17 @@ This repository consists of a working example of an event outbox pattern using D
 
 1. Create an account instance using the cURL request below:
 
-```bash
-curl --request POST \
-  --url http://localhost:8080/account \
-  --header 'Content-Type: application/json' \
-  --data '{
-	"id": "dfe964e0-4ee5-4d56-b7a8-8e8d9ef0a24e",
-	"accountNumber": "1",
-	"userId": "1",
-	"balance": 10.2
-}'
-```
+   ```bash
+   curl --request POST \
+     --url http://localhost:8080/account \
+     --header 'Content-Type: application/json' \
+     --data '{
+       "id": "dfe964e0-4ee5-4d56-b7a8-8e8d9ef0a24e",
+       "accountNumber": "1",
+       "userId": "1",
+       "balance": 10.2
+   }'
+   ```
 
 ### Update Mock Data
 
