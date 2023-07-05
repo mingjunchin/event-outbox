@@ -49,6 +49,11 @@ curl --request POST \
     ```
 
    The cURL request above updates the account's balance to `2.25`.
+
 2. Check the table `event_outbox` to see if the record is inserted.
 3. Navigate to the kafka-ui through `localhost:8081` and look for the `outbox.event.AccountBalance` topic
 4. See that there's event inserted to the topic that corresponds to the record inserted to the `event_outbox` table.
+
+## TODO
+
+- [ ] Demonstrate how we can add AVRO schema to the event payload
