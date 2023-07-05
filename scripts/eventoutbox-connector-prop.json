@@ -1,0 +1,18 @@
+{
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "tasks.max": "1",
+  "database.hostname": "postgres",
+  "database.dbname": "postgres",
+  "database.port": 5432,
+  "database.user": "postgres",
+  "database.password": "postgres",
+  "topic.prefix": "events",
+  "table.include.list": "public.event",
+  "plugin.name": "pgoutput",
+  "transforms": "outbox",
+  "transforms.outbox.type": "io.debezium.transforms.outbox.EventRouter",
+  "transforms.outbox.table.field.event.id": "event_id",
+  "transforms.outbox.table.field.event.key": "aggregate_id",
+  "transforms.outbox.route.by.field": "aggregate_type",
+  "transforms.outbox.table.fields.additional.placement": "pii:header,origin:header,customer_id:header,event_type:header"
+}
