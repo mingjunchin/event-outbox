@@ -7,6 +7,7 @@ import com.example.eventoutbox.repository.EventRepository;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClientFactory;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.serializers.subject.RecordNameStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
+import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.VALUE_SUBJECT_NAME_STRATEGY;
 
 @Component
 public class UpdateAccountBalance {
@@ -32,12 +37,17 @@ public class UpdateAccountBalance {
 
         SchemaRegistryClient schemaRegistryClient =
                 SchemaRegistryClientFactory.newClient(
-                        List.of("localhost:8082"),
+                        List.of("http://schema-registry:8081"),
                         1000,
                         Collections.emptyList(),
                         Collections.emptyMap(),
                         Collections.emptyMap());
-        this.kafkaAvroSerializer = new KafkaAvroSerializer(schemaRegistryClient);
+        // make avro serializer to resolve name based on record name alone and not topic name
+        var config = Map.of(
+                VALUE_SUBJECT_NAME_STRATEGY, RecordNameStrategy.class.getName(),
+                SCHEMA_REGISTRY_URL_CONFIG, "http://schema-registry:8081"
+        );
+        this.kafkaAvroSerializer = new KafkaAvroSerializer(schemaRegistryClient, config);
     }
 
     @Transactional

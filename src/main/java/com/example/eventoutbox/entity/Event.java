@@ -1,13 +1,13 @@
 package com.example.eventoutbox.entity;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
 public class Event {
     // delta eventId = UUID
     // fact eventId = <domain>.<name>.<entityId>.<version>
@@ -20,7 +20,6 @@ public class Event {
     private String origin;
     private UUID aggregateId;
     private String aggregateType;
-    @JdbcTypeCode(SqlTypes.BLOB)
     private byte[] payload;
     private Instant eventTimestamp;
     private Instant createdAt;
