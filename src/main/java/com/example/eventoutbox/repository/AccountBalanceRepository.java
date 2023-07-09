@@ -18,7 +18,6 @@ public interface AccountBalanceRepository extends CrudRepository<AccountBalance,
                     balance = :#{#accountBalance.balance},
                     updated_at = :#{#accountBalance.updatedAt}
             RETURNING *
-            """,
-            nativeQuery = true)
+            """, nativeQuery = true)
     AccountBalance save(AccountBalance accountBalance);
 }

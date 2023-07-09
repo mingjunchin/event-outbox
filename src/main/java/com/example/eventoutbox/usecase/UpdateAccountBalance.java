@@ -4,12 +4,16 @@ import com.example.eventoutbox.entity.AccountBalance;
 import com.example.eventoutbox.entity.Event;
 import com.example.eventoutbox.repository.AccountBalanceRepository;
 import com.example.eventoutbox.repository.EventRepository;
-import jakarta.transaction.Transactional;
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClientFactory;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -17,6 +21,7 @@ public class UpdateAccountBalance {
 
     private final AccountBalanceRepository accountBalanceRepository;
     private final EventRepository eventRepository;
+    private final KafkaAvroSerializer kafkaAvroSerializer;
 
     public UpdateAccountBalance(
             AccountBalanceRepository accountBalanceRepository,
@@ -24,6 +29,15 @@ public class UpdateAccountBalance {
     ) {
         this.accountBalanceRepository = accountBalanceRepository;
         this.eventRepository = eventRepository;
+
+        SchemaRegistryClient schemaRegistryClient =
+                SchemaRegistryClientFactory.newClient(
+                        List.of("localhost:8082"),
+                        1000,
+                        Collections.emptyList(),
+                        Collections.emptyMap(),
+                        Collections.emptyMap());
+        this.kafkaAvroSerializer = new KafkaAvroSerializer(schemaRegistryClient);
     }
 
     @Transactional
@@ -34,6 +48,14 @@ public class UpdateAccountBalance {
 
         accountBalance.updateBalance(balance);
         AccountBalance updatedAccountBalance = accountBalanceRepository.save(accountBalance);
+        var factEventPayload = new com.example.eventoutbox.AccountBalance(
+                updatedAccountBalance.getId().toString(),
+                updatedAccountBalance.getAccountNumber(),
+                updatedAccountBalance.getUserId(),
+                updatedAccountBalance.getBalance().doubleValue(),
+                updatedAccountBalance.getCreatedAt(),
+                updatedAccountBalance.getUpdatedAt()
+        );
         eventRepository.save(
                 new Event(
                         UUID.randomUUID().toString(),
@@ -43,7 +65,7 @@ public class UpdateAccountBalance {
                         "deposit",
                         updatedAccountBalance.getId(),
                         AccountBalance.class.getSimpleName(),
-                        Map.of("balance", updatedAccountBalance.getBalance()),
+                        kafkaAvroSerializer.serialize(AccountBalance.class.getSimpleName(), factEventPayload),
                         Instant.now(),
                         Instant.now(),
                         Instant.now()
