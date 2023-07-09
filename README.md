@@ -56,4 +56,6 @@ This repository consists of a working example of an event outbox pattern using D
 
 ## TODO
 
-- [ ] Demonstrate how we can add AVRO schema to the event payload
+- [ ] Demonstrate how we can add AVRO schema to the event payload.
+    - [x] Serialize payload as byte using AVRO schema and store as `bytea`
+    - [ ] Deserialize payload using AVRO schema.
