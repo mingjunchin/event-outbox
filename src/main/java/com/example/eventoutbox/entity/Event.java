@@ -2,11 +2,8 @@ package com.example.eventoutbox.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,8 +20,7 @@ public class Event {
     private String origin;
     private UUID aggregateId;
     private String aggregateType;
-    @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Object> payload;
+    private byte[] payload;
     private Instant eventTimestamp;
     private Instant createdAt;
     private Instant updatedAt;
@@ -32,7 +28,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(String eventId, String eventType, UUID customerId, boolean pii, String origin, UUID aggregateId, String aggregateType, Map<String, Object> payload, Instant eventTimestamp, Instant createdAt, Instant updatedAt) {
+    public Event(String eventId, String eventType, UUID customerId, boolean pii, String origin, UUID aggregateId, String aggregateType, byte[] payload, Instant eventTimestamp, Instant createdAt, Instant updatedAt) {
         this.eventId = eventId;
         this.eventType = eventType;
         this.customerId = customerId;
@@ -102,11 +98,11 @@ public class Event {
         this.aggregateType = aggregateType;
     }
 
-    public Map<String, Object> getPayload() {
+    public byte[] getPayload() {
         return payload;
     }
 
-    public void setPayload(Map<String, Object> payload) {
+    public void setPayload(byte[] payload) {
         this.payload = payload;
     }
 

@@ -30,7 +30,19 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: "http://schema-registry:8081"
       DYNAMIC_CONFIG_ENABLED: "true"
+  schema-registry:
+    image: "bitnami/schema-registry:latest"
+    container_name: "schema-registry"
+    ports:
+      - "8082:8081"
+    environment:
+      SCHEMA_REGISTRY_KAFKA_BROKERS: "PLAINTEXT://kafka:9092"
+      SCHEMA_REGISTRY_ADVERTISED_HOSTNAME: "schema-registry"
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_CLIENT_AUTHENTICATION: "NONE"
+      SCHEMA_REGISTRY_DEBUG: "true"
   kafka:
     image: "bitnami/kafka:3.2.3"
     container_name: "kafka"

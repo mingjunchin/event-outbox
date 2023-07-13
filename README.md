@@ -54,6 +54,21 @@ This repository consists of a working example of an event outbox pattern using D
 3. Navigate to the kafka-ui through `localhost:8081` and look for the `outbox.event.AccountBalance` topic
 4. See that there's event inserted to the topic that corresponds to the record inserted to the `event_outbox` table.
 
+## Notes
+
+### Using AVRO schema for payload
+
+- To use avro schema for payload, first we define the data type of the payload in the `Event` dto as `byte[]`.
+- Then, the corresponding payload field in the database must be set to type `bytea` (Postgresql).
+- To serialize the payload, we can use the `AvroSerializer` class to serialize the payload using the schema into bytes.
+    - The `AvroSerializer` must be configured to look up the schema by record, instead of topic (WHY?)
+- Persist the entire `Event` object into the database.
+- Kafka connect will pick up the INSERT and publish to kafka topic.
+- The consumer will deserialize the payload using the schema and the `AvroDeserializer` class.
+    - Again, the `AvroDeserializer` must be configured to look up the schema by record, instead of topic (WHY?)
+
 ## TODO
 
-- [ ] Demonstrate how we can add AVRO schema to the event payload
+- [ ] Demonstrate how we can add AVRO schema to the event payload.
+    - [x] Serialize payload as byte using AVRO schema and store as `bytea`
+    - [X] Deserialize payload using AVRO schema.

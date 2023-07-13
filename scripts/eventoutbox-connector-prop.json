@@ -14,5 +14,7 @@
   "transforms.outbox.table.field.event.id": "event_id",
   "transforms.outbox.table.field.event.key": "aggregate_id",
   "transforms.outbox.route.by.field": "aggregate_type",
-  "transforms.outbox.table.fields.additional.placement": "pii:header,origin:header,customer_id:header,event_type:header"
+  "transforms.outbox.route.topic.replacement": "${routedByValue}",
+  "transforms.outbox.table.fields.additional.placement": "pii:header,origin:header,customer_id:header,event_type:header",
+  "value.converter": "io.debezium.converters.BinaryDataConverter"
 }

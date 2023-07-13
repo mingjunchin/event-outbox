@@ -1,0 +1,45 @@
+{
+  "type": "record",
+  "name": "AccountBalance",
+  "namespace": "com.example.eventoutbox",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "accountNumber",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "balance",
+      "type": {
+        "type": "double",
+        "logicalType": "decimal",
+        "precision": 19,
+        "scale": 6
+      }
+    },
+    {
+      "name": "createdAt",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-micros"
+      }
+    },
+    {
+      "name": "updatedAt",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-micros"
+      }
+    }
+  ]
+}
